@@ -1,26 +1,27 @@
 from django.db.models import Q
 from django.http import Http404
+from django.shortcuts import get_object_or_404
+from rest_framework import response, status, viewsets
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import viewsets, status, response
-from django.shortcuts import get_object_or_404
-
-from .models import Product, Category
-from .serializers import ProductSerializer, CategorySerializer
 from farmers.models import Farmer
+
+from .models import Category, Product
+from .serializers import CategorySerializer, ProductSerializer
 
 
 class CropViewSet(viewsets.ModelViewSet):
     """
     CRUD Operation for Crop endpoint
     """
+
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = ProductSerializer
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Product, id=self.kwargs.get('pk'))
+        return get_object_or_404(Product, id=self.kwargs.get("pk"))
 
     def get_queryset(self):
         return Product.objects.all()
@@ -44,9 +45,13 @@ class CropViewSet(viewsets.ModelViewSet):
                 }
                 return response.Response(data, status=status.HTTP_201_CREATED)
         except Exception:
-            return response.Response(data={"message": f"Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
+            return response.Response(
+                data={"message": f"Something went wrong"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
-        return response.Response(data={"message": f"Not authorized"}, status=status.HTTP_400_BAD_REQUEST)
+        return response.Response(
+            data={"message": f"Not authorized"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class CategoryDetail(APIView):
@@ -55,19 +60,21 @@ class CategoryDetail(APIView):
             return Category.objects.get(slug=category_slug)
         except Category.DoesNotExist:
             raise Http404
-    
+
     def get(self, request, category_slug, format=None):
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def search(request):
-    query = request.data.get('query', '')
+    query = request.data.get("query", "")
 
     if query:
-        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        products = Product.objects.filter(
+            Q(name__icontains=query) | Q(description__icontains=query)
+        )
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     else:

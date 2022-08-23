@@ -7,8 +7,8 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
-        ordering = ('name',)
-    
+        ordering = ("name",)
+
     def __str__(self):
         return self.name
 
@@ -25,11 +25,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('-created_at',)
+        ordering = ("-created_at",)
 
     def __str__(self):
         return self.crop_name
-
-
-    
-

@@ -8,6 +8,7 @@ class RegisterFarmerSerializer(serializers.ModelSerializer):
     """
     Currently unused in preference of the below.
     """
+
     first_name = serializers.CharField(required=True, write_only=True)
     last_name = serializers.CharField(required=True, write_only=True)
     location = serializers.CharField(required=True, write_only=True)
@@ -19,16 +20,23 @@ class RegisterFarmerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-        "email", "username", "password", "first_name", "last_name", "phone_number", "location", "farming_type")
-        extra_kwargs = {'password': {'write_only': True}}
+            "email",
+            "username",
+            "password",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "location",
+            "farming_type",
+        )
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         try:
-            password = validated_data.pop('password', None)
+            password = validated_data.pop("password", None)
             new_user = self.Meta.model(
-                email=validated_data['email'],
-                username=validated_data['username'],
-                is_farmer=True)
+                email=validated_data["email"], username=validated_data["username"], is_farmer=True
+            )
             if password is not None:
                 new_user.set_password(password)
 
@@ -36,11 +44,12 @@ class RegisterFarmerSerializer(serializers.ModelSerializer):
 
             new_farmer = Farmer(
                 user=new_user,
-                first_name=validated_data['first_name'],
-                last_name=validated_data['last_name'],
-                phone_number=validated_data['phone_number'],
-                location=validated_data['location'],
-                farming_type=validated_data['farming_type'])
+                first_name=validated_data["first_name"],
+                last_name=validated_data["last_name"],
+                phone_number=validated_data["phone_number"],
+                location=validated_data["location"],
+                farming_type=validated_data["farming_type"],
+            )
 
             new_farmer.save()
 

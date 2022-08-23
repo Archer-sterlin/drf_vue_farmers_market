@@ -1,9 +1,11 @@
-from .serializers import FarmerSerializer, RegisterFarmerSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
-from .models import Farmer
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from auth_api.models import User
+
+from .models import Farmer
+from .serializers import FarmerSerializer, RegisterFarmerSerializer
 
 
 class RegisterFarmerViewSet(viewsets.ModelViewSet):
@@ -51,16 +53,17 @@ class RegisterFarmerViewSet(viewsets.ModelViewSet):
 #         return response.Response(data={"message": f"Not authorized"}, status=status.HTTP_400_BAD_REQUEST)
 #
 
+
 class FarmersViewSet(viewsets.ModelViewSet):
     """
     CRUD Operation for Farmers endpoint
     """
+
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = FarmerSerializer
 
     def get_object(self, queryset=None):
-        return get_object_or_404(Farmer, id=self.kwargs.get('pk'))
+        return get_object_or_404(Farmer, id=self.kwargs.get("pk"))
 
     def get_queryset(self):
         return Farmer.objects.all()
-
