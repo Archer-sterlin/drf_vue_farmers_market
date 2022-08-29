@@ -7,15 +7,19 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = (
+            "id",
             "farmer",
-            "crop_name",
+            "product_name",
+            "get_absolute_url",
             "category",
             "quantity",
             "price",
             "delivery_type",
             "discount",
+            "get_image",
+            "get_thumbnail"
         )
-        read_only_fields = ("farmer", "category")
+        read_only_fields = ("farmer", "id")
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -26,4 +30,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "slug",
+            "get_absolute_url",
+            "products",
         )

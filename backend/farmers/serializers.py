@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from auth_api.models import User
+from product.models import Category
 from farmers.models import Farmer
 
 
@@ -50,16 +51,15 @@ class RegisterFarmerSerializer(serializers.ModelSerializer):
                 location=validated_data["location"],
                 farming_type=validated_data["farming_type"],
             )
-
+            
+            category = Category(
+                name=validated_data["farming_type"],
+                slug=validated_data["farming_type"].replace(" ","_")
+                )
+            category.save()
             new_farmer.save()
 
             return new_user
 
         except Exception as error:
             return error
-
-
-class FarmerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Farmer
-        fields = "__all__"

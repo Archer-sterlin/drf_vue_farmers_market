@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -26,11 +28,11 @@ urlpatterns = [
     path("doc/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     # Oauth2
-    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/v1/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # custom urls
-    path("api/user/", include("auth_api.urls")),
+    path("api/v1/", include("auth_api.urls",namespace="user_api")),
     path("api/v1/", include("farmers.urls", namespace="farmers_api")),
     path("api/v1/", include("product.urls", namespace="product_api")),
     path("api/v1/", include("order.urls", namespace="order_api")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

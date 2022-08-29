@@ -1,11 +1,10 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import OrderItemViewSet, OrderViewSet
+from order import views
 
-app_name = "order_api"
+app_name = "orders"
 
-router = DefaultRouter()
-router.register("orders", OrderViewSet, basename="orders")
-router.register("farmer/crops", OrderItemViewSet, basename="order_item")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('checkout/', views.checkout),
+    path('orders/', views.OrdersList.as_view()),  
+]

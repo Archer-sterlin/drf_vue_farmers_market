@@ -1,14 +1,14 @@
 from pathlib import Path
 
-from decouple import config
+# from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY = 'config("SECRET_KEY")'
 
-DEBUG = config("DEBUG", cast=bool, default=False)
+DEBUG = True #config("DEBUG", cast=bool, default=False)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "corsheaders",
     "rest_framework_simplejwt",
+    'drf_api_logger',
     # User Defined Apps
     "farmers",
     "product",
@@ -42,6 +43,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
 ]
 
 SWAGGER_SETTINGS = {
@@ -141,3 +143,10 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "auth_api.User"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
+
+DRF_API_LOGGER_DATABASE = True 
+DRF_API_LOGGER_SIGNAL = True 
+DRF_API_LOGGER_EXCLUDE_KEYS = ['password', 'token', 'access', 'refresh']

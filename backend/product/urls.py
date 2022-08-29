@@ -1,11 +1,12 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import CropViewSet
+from product import views
 
-app_name = "product_api"
+app_name = "products"
 
-router = DefaultRouter()
-
-router.register("farmer/products", CropViewSet, basename="crops_endpoint")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path('products/', views.LatestProductsList.as_view()),
+    path('products/search/', views.search),
+    path('products/<slug:category_slug>/<slug:product_slug>/', views.ProductDetail.as_view()),
+    path('products/<str:category_name>/', views.CategoryDetail.as_view()),
+]
